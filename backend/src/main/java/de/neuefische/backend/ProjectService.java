@@ -10,9 +10,5 @@ import java.util.List;
 public class ProjectService {
     private final ProjectRepository projectRepository;
 
-    public Project addProject(Project newProject){
-        return projectRepository.save(newProject.withId(null));
-    }
-
     public List<Project> getAllProjects() {return projectRepository.findAll();}
 }

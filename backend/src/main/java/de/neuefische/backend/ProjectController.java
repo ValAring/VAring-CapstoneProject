@@ -15,15 +15,9 @@ public class ProjectController {
 
     private final ProjectService projectService;
 
+    @GetMapping
     public List<Project> allProjects(){
         return projectService.getAllProjects();
     }
-
-    @PostMapping
-    @ResponseStatus (HttpStatus.CREATED)
-    public Project addProject(@RequestBody Project newProject){return projectService.addProject(newProject);}
-
-
-
 
 }

@@ -4,7 +4,7 @@ type Props = {
     project: Project
 }
 
-export default function BookCard( props: Props ) {
+export default function Card( props: Props ) {
 
     return (
         <div>

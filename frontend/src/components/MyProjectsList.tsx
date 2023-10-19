@@ -8,7 +8,7 @@ type Props = {
 export default function MyProjectsList( props: Props ) {
 
     return (
-        <div className="BookList">
+        <div className="ProjectsList">
             {
                 props.project.map(project =>
                     <Card project={project}/>
