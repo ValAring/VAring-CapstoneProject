@@ -11,7 +11,7 @@ export default function MyProjectsList( props: Props ) {
         <div className="projectsList">
             {
                 props.project.map(project =>
-                    <Card project={project}/>
+                    <Card key={project.id} project={project}/>
                 )
             }
         </div>

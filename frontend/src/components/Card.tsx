@@ -1,6 +1,6 @@
 import {Project} from "../assets/Types.tsx";
 
-type Props = {
+interface Props {
     project: Project
 }
 
