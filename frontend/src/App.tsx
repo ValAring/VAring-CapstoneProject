@@ -12,7 +12,7 @@ export default function App() {
         axios.get("/api")
             .then((response) => {
                 if(response.status !== 200)
-                    throw "Wrong response Status when loading: "+response.status;
+                    throw new Error("Wrong response Status when loading: "+response.status);
                 setMyProjects(response.data);
             })
             .catch((error)=>{

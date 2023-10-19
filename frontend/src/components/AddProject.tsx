@@ -25,6 +25,7 @@ export default function AddProject() {
 
     return (
         <>
+            <h2>My new Project</h2>
             <form onSubmit={saveNewPoject}>
                 <input value={author} onChange={addAuthor}/>
                 <input value={text} onChange={addTitle}/>

@@ -8,7 +8,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-public class ProjectServiceTest {
+class ProjectServiceTest {
 
     private ProjectRepository projectRepository;
     private ProjectService projectService;

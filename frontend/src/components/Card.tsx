@@ -1,7 +1,7 @@
 import {Project} from "../assets/Types.tsx";
 
 type Props = {
-    project: Project
+    readonly project: Project
 }
 
 export default function Card( props: Props ) {
