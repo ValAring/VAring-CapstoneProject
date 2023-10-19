@@ -22,7 +22,8 @@ export default function App() {
 
     return (
         <>
-            <h1>WIP Wizard</h1>
+            <h1>Work In Progress - Tracker</h1>
+
             <MyProjectsList project={myProjects}/>
         </>
     )

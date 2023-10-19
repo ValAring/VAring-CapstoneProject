@@ -7,9 +7,9 @@ type Props = {
 export default function Card( props: Props ) {
 
     return (
-        <div>
-            <div>author : {props.project.author }</div>
-            <div>description : {props.project.description }</div>
+        <div className="card">
+            <div>{props.project.author }</div>
+            <div>{props.project.description }</div>
         </div>
     )
 }
