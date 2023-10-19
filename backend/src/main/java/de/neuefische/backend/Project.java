@@ -6,8 +6,6 @@ import lombok.With;
 public record Project(
         String id,
         String author,
-        String description,
-        String[] tags,
-        boolean visibility
+        String description
 ) {
 }
