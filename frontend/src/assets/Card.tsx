@@ -10,6 +10,8 @@ export default function Card( props: Props ) {
         <div className="card">
             <div>{props.project.author}</div>
             <div>{props.project.description}</div>
+            <div>{props.project.timeCreated}</div>
+            <div>{props.project.lastEdited}</div>
         </div>
     )
 }
