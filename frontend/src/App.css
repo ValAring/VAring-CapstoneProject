@@ -4,11 +4,16 @@
 .projectsList{
   display: flex;
 }
-.card{
-  margin: 0 2em 2em 0;
-  padding: 1em;
+.card, .addButton{
+  margin: 0 1em 1em 0;
   width: 150px;
   height: 150px;
   border: #fff 1px solid;
   overflow: hidden;
+  color: #fff;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
 }

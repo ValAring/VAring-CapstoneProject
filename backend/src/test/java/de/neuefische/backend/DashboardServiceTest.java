@@ -3,9 +3,7 @@ package de.neuefische.backend;
 import de.neuefische.backend.model.Project;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 
-import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.List;
 
