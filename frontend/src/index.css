@@ -34,3 +34,12 @@ button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
+
+form{
+  display: flex;
+  flex-direction: column;
+}
+input, textarea{
+  margin-bottom: 1em;
+  padding: 0.8em;
+}

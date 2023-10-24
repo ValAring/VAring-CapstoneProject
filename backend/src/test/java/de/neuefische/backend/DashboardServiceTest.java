@@ -10,7 +10,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-public class DashboardServiceTest {
+class DashboardServiceTest {
     private ProjectRepository projectRepository;
     private DashboardService dashboardService;
     private DateTimeService dateTimeService;
@@ -62,7 +62,7 @@ public class DashboardServiceTest {
         assertEquals(expected, actual);
     }
     @Test
-    public void testAddProject() {
+    void testAddProject() {
         // GIVEN
         Project expected = new Project(null, "Author", "Description", "2023-08-30T12:00:00Z", "2023-08-30T12:00:00Z");
         //WHEN

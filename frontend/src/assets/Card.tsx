@@ -6,12 +6,12 @@ type Props = {
 
 export default function Card( props: Props ) {
 
+
     return (
         <div className="card">
             <div>{props.project.author}</div>
             <div>{props.project.description}</div>
-            <div>{props.project.timeCreated}</div>
-            <div>{props.project.lastEdited}</div>
         </div>
     )
 }
+

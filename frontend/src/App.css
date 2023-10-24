@@ -3,6 +3,7 @@
 }
 .projectsList{
   display: flex;
+  flex-flow: wrap;
 }
 .card, .addButton{
   margin: 0 1em 1em 0;
