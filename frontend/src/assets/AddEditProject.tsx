@@ -43,10 +43,7 @@ export default function AddEditProject(props: Props){
                 <input name="author" value={author} onChange={addAuthor}/>
                 <textarea name="description" value={description} onChange={addDescription}/>
                 <button>Save</button>
-
-                <button type="button" onClick={()=>navigate("/")}>Cancel</button>
             </form>
-
         </>
     )
 }
