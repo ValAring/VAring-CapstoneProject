@@ -5,7 +5,7 @@ import {Project} from "./Types.tsx";
 import axios from "axios";
 
 type Props = {
-    onItemChange: ()=> void
+    readonly onItemChange: ()=> void
 }
 export default function AddEditProject(props: Props){
     const navigate = useNavigate();
