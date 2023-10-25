@@ -9,7 +9,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-public class DashboardServiceTest {
+class DashboardServiceTest {
     private ProjectRepository projectRepository;
     private DashboardService dashboardService;
 
