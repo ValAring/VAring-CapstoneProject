@@ -6,6 +6,7 @@ type Props = {
 
 export default function Card( props: Props ) {
 
+
     return (
         <div className="card">
             <div>{props.project.author}</div>
@@ -13,3 +14,4 @@ export default function Card( props: Props ) {
         </div>
     )
 }
+

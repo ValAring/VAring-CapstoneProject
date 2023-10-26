@@ -3,6 +3,8 @@ import axios from "axios";
 import {useEffect, useState} from "react";
 import {Project} from "./assets/Types.tsx";
 import MyDashboard from "./assets/MyDashboard.tsx";
+import {Route, Routes} from "react-router-dom";
+import AddEditProject from "./assets/AddEditProject.tsx";
 
 export default function App() {
     const [myProjects, setMyProjects] = useState<Project[]>([]);
@@ -23,8 +25,10 @@ export default function App() {
   return (
     <>
       <h1>Work in Progress - Tracker</h1>
-
-        <MyDashboard project={myProjects}/>
+        <Routes>
+            <Route path={"/"}           element={<MyDashboard project={myProjects}/>}/>
+            <Route path={"/addProject"} element={<AddEditProject onItemChange={loadAllProjects}/>}/>
+        </Routes>
     </>
   )
 }
