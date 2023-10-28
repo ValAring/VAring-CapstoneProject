@@ -1,5 +1,6 @@
 package de.neuefische.backend;
 
+import de.neuefische.backend.model.Project;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -16,6 +17,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class DashboardIntegrationTest {
     @Autowired
     private MockMvc mockMvc;
+    @Autowired
+    ProjectRepository projectRepository;
 
     @Test
     @DirtiesContext
@@ -47,5 +50,15 @@ class DashboardIntegrationTest {
                 .andExpect(status().isCreated())
                 .andExpect(content().json("{\"author\":\"Author1\",\"description\":\"MyDescription1\"}"))
                 .andExpect(jsonPath("$.id").isString());
+    }
+
+    @Test
+    @DirtiesContext
+    void removeBookTest() throws Exception {
+        projectRepository.save(new Project("123", "A", "T", "then", "now"));
+
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/123"))
+                .andExpect(status().isOk());
+
     }
 }

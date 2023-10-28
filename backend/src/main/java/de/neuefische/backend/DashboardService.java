@@ -23,4 +23,8 @@ public class DashboardService {
         );
         return projectRepository.save(project);
     }
+
+    public void removeProject(String id) {
+        projectRepository.deleteById(id);
+    }
 }
