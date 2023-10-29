@@ -3,6 +3,7 @@ import axios from "axios";
 import {useEffect, useState} from "react";
 import {Project} from "./assets/Types.tsx";
 import MyDashboard from "./assets/MyDashboard.tsx";
+import ProjectDetails from "./assets/ProjectDetails.tsx";
 import {Route, Routes} from "react-router-dom";
 import AddEditProject from "./assets/AddEditProject.tsx";
 
@@ -28,6 +29,7 @@ export default function App() {
         <Routes>
             <Route path={"/"}           element={<MyDashboard project={myProjects}/>}/>
             <Route path={"/addProject"} element={<AddEditProject onItemChange={loadAllProjects}/>}/>
+            <Route path="/:id"          element={<ProjectDetails/>} />
         </Routes>
     </>
   )

@@ -6,6 +6,8 @@ import org.junit.jupiter.api.Test;
 
 import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -60,6 +62,33 @@ class DashboardServiceTest {
                 new Project("128","Author6","Title6", "timestamp6", "today6")
         );
         assertEquals(expected, actual);
+    }
+    @Test
+    void findProjectById_Exist() {
+        //GIVEN
+        String id = "12";
+        Project project12 = new Project(id,  "Author1", "Desc1", "time1", "time2");
+
+        when(projectRepository.findById(id)).thenReturn(Optional.of(project12));
+
+        //WHEN
+        Project actual = dashboardService.getProjectById(id);
+
+        //THEN
+        Project expected = new Project("12",  "Author1", "Desc1", "time1", "time2");
+        verify(projectRepository).findById(id);
+        assertEquals(expected,actual);
+    }
+
+    @Test
+    void findProjectById_NotExist(){
+        //GIVEN
+        String id ="33";
+
+        when(projectRepository.findById(id)).thenReturn(Optional.empty());
+        //WHEN
+        //THEN
+        assertThrows(NoSuchElementException.class, ()->dashboardService.getProjectById(id));
     }
     @Test
     void testAddProject() {

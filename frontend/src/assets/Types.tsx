@@ -10,5 +10,7 @@ export type Project = {
 export type Wip = {
     id: string,
     wipText: string,
-    images: string[]
+    images: string[],
+    timeCreated: string,
+    lastEdited: string
 }
