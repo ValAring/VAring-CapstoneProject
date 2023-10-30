@@ -28,7 +28,7 @@ public class DashboardController {
     public Project addProject(@RequestBody Project newProject){
         return dashboardService.addProject(newProject);
     }
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/project/{id}")
     public void deleteProject(@PathVariable String id) {
         dashboardService.removeProject(id);
     }
