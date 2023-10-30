@@ -43,7 +43,7 @@ class DashboardIntegrationTest {
         projectRepository.save(book);
 
         //WHEN
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/"+ id))
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/project/"+ id))
 
                 //THEN
                 .andExpect(status().isOk())
@@ -93,7 +93,7 @@ class DashboardIntegrationTest {
     void removeBookTest() throws Exception {
         projectRepository.save(new Project("123", "A", "T", "then", "now"));
 
-        mockMvc.perform(MockMvcRequestBuilders.delete("/api/123"))
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/project/123"))
                 .andExpect(status().isOk());
 
     }
