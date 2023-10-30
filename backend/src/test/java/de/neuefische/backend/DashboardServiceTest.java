@@ -74,4 +74,14 @@ class DashboardServiceTest {
         verify(projectRepository).save(any(Project.class));
         assertEquals(expected, actual);
     }
+
+    @Test
+    void deleteProject() {
+
+        Project p1 = new Project("123", "A", "Text", "then", "now");
+
+        doThrow(NullPointerException.class).when(projectRepository).deleteById(p1.id());
+
+        assertThrows(NullPointerException.class, () -> projectRepository.deleteById(p1.id()));
+    }
 }
