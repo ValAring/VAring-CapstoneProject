@@ -36,7 +36,7 @@ export default function AddEditProject(props: Props){
 
     return(
         <>
-            <button className="backButton" onClick={()=>navigate("/")}>My Dashboard</button>
+            <button className="iconBTN" onClick={() => navigate("/")}><img src="/src/images/house.svg" alt="back home button" width="20px" height="20px"/></button>
             <h2>Add a new Project</h2>
 
             <form onSubmit={saveNew}>

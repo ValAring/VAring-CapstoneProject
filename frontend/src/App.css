@@ -18,3 +18,7 @@
   align-items: center;
   flex-direction: column;
 }
+
+.iconBTN{
+  margin-right: 1em;
+}
