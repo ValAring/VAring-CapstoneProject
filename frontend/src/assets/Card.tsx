@@ -1,4 +1,5 @@
 import {Project} from "./Types.tsx";
+import {useNavigate} from "react-router-dom";
 
 type Props = {
     readonly project: Project
@@ -6,12 +7,13 @@ type Props = {
 
 export default function Card( props: Props ) {
 
+    const navigate = useNavigate();
 
     return (
-        <div className="card">
-            <div>{props.project.author}</div>
-            <div>{props.project.description}</div>
-        </div>
+        <button className="card" onClick={()=>navigate("/"+props.project.id)}>
+            {/*{props.project.wips[0].images[0].length === 0 && ()}*/}
+            <img src="/src/images/default-canvas.png" alt="default empty canvas" width="150px" height="150px"/>
+        </button>
     )
 }
 

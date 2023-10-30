@@ -19,13 +19,16 @@ public class DashboardController {
     public List<Project> allProjects(){
         return dashboardService.getAllProjects();
     }
-
+    @GetMapping("/project/{id}")
+    public Project getProjectByID(@PathVariable String id){
+        return dashboardService.getProjectById(id);
+    }
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Project addProject(@RequestBody Project newProject){
         return dashboardService.addProject(newProject);
     }
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/project/{id}")
     public void deleteProject(@PathVariable String id) {
         dashboardService.removeProject(id);
     }

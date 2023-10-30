@@ -34,6 +34,42 @@ class DashboardIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(content().json("[]"));
     }
+    @Test
+    @DirtiesContext
+    void getProjectByID_ifFound() throws Exception {
+        //GIVEN
+        String id= "1";
+        Project book = new Project(id,"Author 1","Desc 1","time 1", "time 2");
+        projectRepository.save(book);
+
+        //WHEN
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/project/"+ id))
+
+                //THEN
+                .andExpect(status().isOk())
+                .andExpect(content().json("""
+					{
+						"id"         : "1",
+						"author"     : "Author 1",
+						"description": "Desc 1",
+						"timeCreated": "time 1",
+					    "lastEdited" : "time 2"
+					}
+				"""));
+    }
+
+    @Test
+    @DirtiesContext
+    void getProjectByID_ifNotFound_handleNoSuchElementException() throws Exception {
+        //GIVEN
+        String id= "3";
+
+        //WHEN
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/"+ id))
+
+                //THEN
+                .andExpect(status().isNotFound());
+    }
 
     @Test
     @DirtiesContext
@@ -57,7 +93,7 @@ class DashboardIntegrationTest {
     void removeBookTest() throws Exception {
         projectRepository.save(new Project("123", "A", "T", "then", "now"));
 
-        mockMvc.perform(MockMvcRequestBuilders.delete("/api/123"))
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/project/123"))
                 .andExpect(status().isOk());
 
     }
