@@ -29,7 +29,7 @@ export default function App() {
         <Routes>
             <Route path={"/"}           element={<MyDashboard project={myProjects}/>}/>
             <Route path={"/addProject"} element={<AddEditProject onItemChange={loadAllProjects}/>}/>
-            <Route path="/:id"          element={<ProjectDetails onItemChange={loadAllProjects}/>} />
+            <Route path={"/:id"}        element={<ProjectDetails onItemChange={loadAllProjects}/>} />
         </Routes>
     </>
   )

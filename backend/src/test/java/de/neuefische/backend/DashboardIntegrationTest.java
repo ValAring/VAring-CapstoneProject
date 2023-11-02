@@ -39,7 +39,7 @@ class DashboardIntegrationTest {
     void getProjectByID_ifFound() throws Exception {
         //GIVEN
         String id= "1";
-        Project book = new Project(id,"Author 1","Desc 1","time 1", "time 2");
+        Project book = new Project(id,"Author 1","Desc 1", "URL","time 1", "time 2");
         projectRepository.save(book);
 
         //WHEN
@@ -52,6 +52,7 @@ class DashboardIntegrationTest {
 						"id"         : "1",
 						"author"     : "Author 1",
 						"description": "Desc 1",
+						"imageURL"   : "URL",
 						"timeCreated": "time 1",
 					    "lastEdited" : "time 2"
 					}
@@ -80,18 +81,18 @@ class DashboardIntegrationTest {
                 .perform(MockMvcRequestBuilders
                         .post("/api")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"author\":\"Author1\",\"description\":\"MyDescription1\"}")
+                        .content("{\"author\":\"Author1\",\"description\":\"MyDescription1\",\"imageURL\": \"URL\"}")
                 )
                 //THEN
                 .andExpect(status().isCreated())
-                .andExpect(content().json("{\"author\":\"Author1\",\"description\":\"MyDescription1\"}"))
+                .andExpect(content().json("{\"author\":\"Author1\",\"description\":\"MyDescription1\",\"imageURL\": \"URL\"}"))
                 .andExpect(jsonPath("$.id").isString());
     }
 
     @Test
     @DirtiesContext
     void removeBookTest() throws Exception {
-        projectRepository.save(new Project("123", "A", "T", "then", "now"));
+        projectRepository.save(new Project("123", "A", "T", "URL","then", "now"));
 
         mockMvc.perform(MockMvcRequestBuilders.delete("/api/project/123"))
                 .andExpect(status().isOk());

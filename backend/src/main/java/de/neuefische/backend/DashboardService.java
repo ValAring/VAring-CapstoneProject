@@ -3,7 +3,9 @@ package de.neuefische.backend;
 import de.neuefische.backend.model.Project;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -12,6 +14,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class DashboardService {
     private final ProjectRepository projectRepository;
+    private final CloudinaryService cloudinaryService;
     private final DateTimeService dateTimeService = new DateTimeService();
 
     public List<Project> getAllProjects() {return projectRepository.findAll();}
@@ -24,11 +27,18 @@ public class DashboardService {
             throw new NoSuchElementException("Project nicht gefunden");
         }
     }
-    public Project addProject(Project newProject) {
+    public Project addProject(Project newProject, MultipartFile image) throws IOException {
+
+        String url = null;
+        if (image != null) {
+            url = cloudinaryService.uploadImage(image);
+        }
+
         Project project = new Project(
                 null,
                 newProject.author(),
                 newProject.description(),
+                url,
                 dateTimeService.getCurrentDateTime().toString(),
                 dateTimeService.getCurrentDateTime().toString()
         );
