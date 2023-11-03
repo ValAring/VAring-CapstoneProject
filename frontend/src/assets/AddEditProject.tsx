@@ -2,7 +2,7 @@ import '../App.css';
 import {useNavigate} from "react-router-dom";
 import {ChangeEvent, FormEvent, useState} from "react";
 import axios from "axios";
-import homeBTN from "../../public/house.svg";
+import homeBTN from "/house.svg";
 
 type Props = {
     readonly onItemChange: ()=> void
@@ -54,7 +54,21 @@ export default function AddEditProject(props: Props){
             const selectedFile = event.target.files[0];
 
             if (selectedFile.type.startsWith("image/")) {
-                setImageFile(selectedFile);
+
+                // Resize the image before setting it in the state
+                resizeImage(selectedFile, (resizedFile) => {
+                    setImageFile(resizedFile);
+
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        if (e.target) {
+                            setImageUrl(e.target.result as string);
+                        }
+                    };
+                    reader.readAsDataURL(resizedFile);
+                });
+
+                /*setImageFile(selectedFile);
 
                 const reader = new FileReader();
                 reader.onload = (e) => {
@@ -62,7 +76,7 @@ export default function AddEditProject(props: Props){
                         setImageUrl(e.target.result as string);
                     }
                 };
-                reader.readAsDataURL(selectedFile);
+                reader.readAsDataURL(selectedFile);*/
             } else {
                 console.error("Selected file is not an image.");
             }
@@ -88,4 +102,46 @@ export default function AddEditProject(props: Props){
             </form>
         </>
     )
+}
+
+function resizeImage(file, callback) {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+        const img = new Image();
+        img.src = e.target.result as string;
+
+        img.onload = () => {
+            const canvas = document.createElement("canvas");
+            const ctx = canvas.getContext("2d");
+
+            // Calculate the desired dimensions (e.g., 200x200)
+            const maxWidth = 800;
+            const maxHeight = 800;
+            let width = img.width;
+            let height = img.height;
+
+            if (width > height) {
+                if (width > maxWidth) {
+                    height *= maxWidth / width;
+                    width = maxWidth;
+                }
+            } else {
+                if (height > maxHeight) {
+                    width *= maxHeight / height;
+                    height = maxHeight;
+                }
+            }
+            canvas.width = width;
+            canvas.height = height;
+
+            ctx.drawImage(img, 0, 0, width, height);
+
+            // Convert the canvas back to a blob (JPEG format in this example)
+            canvas.toBlob((blob) => {
+                const resizedFile = new File([blob], file.name, { type: "image/jpeg" });
+                callback(resizedFile);
+            }, "image/jpeg");
+        };
+    };
+    reader.readAsDataURL(file);
 }

@@ -35,22 +35,21 @@ class CloudinaryIntegrationTest {
     @MockBean
     private Cloudinary cloudinary;
 
-    /*@Test
+    @Test
     @DirtiesContext
     void testUploadImage() throws Exception {
 
         MockMultipartFile json = new MockMultipartFile("data", null, MediaType.APPLICATION_JSON_VALUE, """
                 {
-                    "id": "",
-                    "url": "url"
+                    "url": "http://res.cloudinary.com/dr6lkj5zv/image/upload/v1698920610/dx7b7mg3be66rnfnilxt.jpg"
                 }""".getBytes());
-        MockMultipartFile file = new MockMultipartFile("file", "".getBytes());
+        //MockMultipartFile file = new MockMultipartFile("file", "".getBytes());
 
         mockMvc.perform(multipart("/api")
-                .file(json)
-                .file(file))
+                .file(json))
+                //.file(file))
                 .andExpect(status().isOk());
-    }*/
+    }
 
     /*@Test
     void testUploadImage() throws IOException {
