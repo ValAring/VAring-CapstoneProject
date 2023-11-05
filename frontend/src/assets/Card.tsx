@@ -12,7 +12,7 @@ export default function Card( props: Props ) {
 
     return (
         <button className="card" onClick={()=>navigate("/"+props.project.id)}>
-            <img src={(props.project.imageURL === null) ? defaultCanvas : props.project.imageURL} alt="default empty canvas" width="150px" height="150px"/>
+            <img src={(props.project.imageURL === null) ? defaultCanvas : props.project.imageURL} alt="default empty canvas" width="150px" height="auto"/>
         </button>
     )
 }

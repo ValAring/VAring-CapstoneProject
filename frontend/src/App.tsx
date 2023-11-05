@@ -25,7 +25,7 @@ export default function App() {
 
   return (
     <>
-      <h1>Work in Progress - Tracker</h1>
+      <h1>WIP-Tracker</h1>
         <Routes>
             <Route path={"/"}           element={<MyDashboard project={myProjects}/>}/>
             <Route path={"/addProject"} element={<AddEditProject onItemChange={loadAllProjects}/>}/>

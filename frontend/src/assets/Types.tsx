@@ -11,6 +11,6 @@ export type Wip = {
     id: string,
     wipText: string,
     images: string[],
-    timeCreated: string,
-    lastEdited: string
+    posted: string,
+    edited: string
 }

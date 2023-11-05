@@ -68,15 +68,6 @@ export default function AddEditProject(props: Props){
                     reader.readAsDataURL(resizedFile);
                 });
 
-                /*setImageFile(selectedFile);
-
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    if (e.target) {
-                        setImageUrl(e.target.result as string);
-                    }
-                };
-                reader.readAsDataURL(selectedFile);*/
             } else {
                 console.error("Selected file is not an image.");
             }

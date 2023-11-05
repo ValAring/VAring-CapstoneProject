@@ -1,6 +1,7 @@
 package de.neuefische.backend.model;
 
 import org.springframework.data.annotation.Id;
+import java.util.List;
 
 public record Project(
         @Id
@@ -12,3 +13,5 @@ public record Project(
         String lastEdited
 ) {
 }
+
+

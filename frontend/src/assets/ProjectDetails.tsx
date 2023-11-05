@@ -5,6 +5,7 @@ import axios from "axios";
 
 import homeBTN from "/house.svg";
 import deleteBTN from "/delete-cross.svg";
+import defaultCanvas from '/default-canvas.png';
 
 type Props = {
     readonly onItemChange: () => void
@@ -42,21 +43,19 @@ export default function ProjectDetails(props: Props) {
 
     return (
         <>
-
-            <button className="iconBTN" onClick={() => navigate("/")}>
-                <img src={homeBTN} alt="back home button" width="20px" height="20px"/>
-            </button>
-            <button className="iconBTN" onClick={deleteCard}>
-                <img src={deleteBTN} alt="delete button" width="20px" height="20px"/>
-            </button>
-
             <div className="projectDetails">
+                <button className="iconBTN" onClick={() => navigate("/")}>
+                <img src={homeBTN} alt="back home button" width="20px" height="20px"/>
+                </button>
+                <button className="editBTN" onClick={deleteCard}>
+                    <img src={deleteBTN} alt="delete button" width="20px" height="20px"/>
+                </button>
+
+                <h2>{project && project.author}</h2>
                 {project
                     ? <>
-                        <img src={project.imageURL} alt={project.author} width="80%" height="auto"/>
+                        <img src={(project.imageURL === null) ? defaultCanvas : project.imageURL} alt={project.author} width="100%" height="auto"/>
                         <p>
-                            <b>{project.author}</b>
-                            <br/>
                             {project.description}
                         </p>
                     </>
@@ -64,7 +63,6 @@ export default function ProjectDetails(props: Props) {
                         <p>Project not found</p>
                     </>
                 }
-
             </div>
         </>
     );
