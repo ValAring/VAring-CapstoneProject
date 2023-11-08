@@ -14,10 +14,15 @@ body {
   min-height: 100vh;
 }
 h1 {
-  font-size: 3.2em;
+  font-size: 1.8em;
   line-height: 1.1;
 }
+h2 {
+  font-size: 1em;
+  line-height: 0.8;
+}
 button {
+  margin-bottom: 1em;
   border-radius: 5px;
   border: 1px solid #fff;
   padding: 0.6em 1.2em;

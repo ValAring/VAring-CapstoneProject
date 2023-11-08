@@ -2,7 +2,7 @@ export type Project = {
     id: string,
     author: string,
     description: string,
-    wips: Wip[],
+    imageURL: string,
     timeCreated: string,
     lastEdited: string
 }
@@ -11,6 +11,6 @@ export type Wip = {
     id: string,
     wipText: string,
     images: string[],
-    timeCreated: string,
-    lastEdited: string
+    posted: string,
+    edited: string
 }

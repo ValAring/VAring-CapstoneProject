@@ -3,6 +3,10 @@ import {useNavigate, useParams} from "react-router-dom";
 import {useEffect, useState} from "react";
 import axios from "axios";
 
+import homeBTN from "/house.svg";
+import deleteBTN from "/delete-cross.svg";
+import defaultCanvas from '/default-canvas.png';
+
 type Props = {
     readonly onItemChange: () => void
 }
@@ -39,21 +43,26 @@ export default function ProjectDetails(props: Props) {
 
     return (
         <>
-
-            <button className="iconBTN" onClick={() => navigate("/")}><img src="/src/images/house.svg" alt="back home button" width="20px" height="20px"/></button>
-            <button className="iconBTN" onClick={deleteCard}><img src="/src/images/delete-cross.svg" alt="Delete Project trash icon"  width="20px" height="20px"/></button>
-
             <div className="projectDetails">
+                <button className="iconBTN" onClick={() => navigate("/")}>
+                <img src={homeBTN} alt="back home button" width="20px" height="20px"/>
+                </button>
+                <button className="editBTN" onClick={deleteCard}>
+                    <img src={deleteBTN} alt="delete button" width="20px" height="20px"/>
+                </button>
+
+                <h2>{project && project.author}</h2>
                 {project
                     ? <>
-                        {project.author && <p>Author : <br/>{project.author}</p>}
-                        {project.description && <p>Description : <br/>{project.description}</p>}
+                        <img src={(project.imageURL === null) ? defaultCanvas : project.imageURL} alt={project.author} width="100%" height="auto"/>
+                        <p>
+                            {project.description}
+                        </p>
                     </>
                     : <>
                         <p>Project not found</p>
                     </>
                 }
-
             </div>
         </>
     );
