@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -27,14 +28,10 @@ public class DashboardController {
     }
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-     public Project addProject(@RequestPart ("data") Project newProject, @RequestPart(name = "file", required = false) MultipartFile image) throws Exception {
+    public Project addProject(@RequestPart ("data") Project newProject, @RequestPart(name = "file", required = false) MultipartFile image) throws IOException {
         return dashboardService.addProject(newProject, image);
     }
-    @PutMapping("/project/{id}/edit")
-    @ResponseStatus(HttpStatus.OK)
-    public Project editProject(@PathVariable String id, @RequestPart Project project) throws Exception {
-        return dashboardService.editProject(id, project);
-    }
+
     @DeleteMapping("/project/{id}")
     public void deleteProject(@PathVariable String id) {
         dashboardService.removeProject(id);

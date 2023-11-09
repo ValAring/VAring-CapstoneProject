@@ -26,6 +26,9 @@
   float: right;
   margin-left: 1em;
 }
+.saveBTN{
+  margin-top: 2em;
+}
 
 .projectDetails{
   margin: 2em auto 0 auto;

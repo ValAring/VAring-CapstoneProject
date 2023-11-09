@@ -43,6 +43,7 @@ button:focus-visible {
 form{
   display: flex;
   flex-direction: column;
+  width: 90vw;
 }
 input, textarea{
   margin-bottom: 1em;
