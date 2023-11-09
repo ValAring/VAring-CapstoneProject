@@ -112,6 +112,8 @@ class DashboardServiceTest {
 
         doThrow(NullPointerException.class).when(projectRepository).deleteById(p1.id());
 
-        assertThrows(NullPointerException.class, () -> projectRepository.deleteById(p1.id()));
+        assertThrows(NullPointerException.class, () -> {
+            projectRepository.deleteById("123");
+        });
     }
 }

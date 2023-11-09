@@ -36,9 +36,4 @@ public class DashboardController {
     public void deleteProject(@PathVariable String id) {
         dashboardService.removeProject(id);
     }
-
-    @ExceptionHandler(NoSuchElementException.class)
-    public String handleNoSuchElementException() {
-        return "ID doesn't exist";
-    }
 }
