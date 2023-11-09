@@ -6,11 +6,3 @@ export type Project = {
     timeCreated: string,
     lastEdited: string
 }
-
-export type Wip = {
-    id: string,
-    wipText: string,
-    images: string[],
-    posted: string,
-    edited: string
-}

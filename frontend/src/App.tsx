@@ -5,7 +5,8 @@ import {Project} from "./assets/Types.tsx";
 import MyDashboard from "./assets/MyDashboard.tsx";
 import ProjectDetails from "./assets/ProjectDetails.tsx";
 import {Route, Routes} from "react-router-dom";
-import AddEditProject from "./assets/AddEditProject.tsx";
+import AddProject from "./assets/AddProject.tsx";
+import EditProject from "./assets/EditProject.tsx";
 
 export default function App() {
     const [myProjects, setMyProjects] = useState<Project[]>([]);
@@ -28,7 +29,8 @@ export default function App() {
       <h1>WIP-Tracker</h1>
         <Routes>
             <Route path={"/"}           element={<MyDashboard project={myProjects}/>}/>
-            <Route path={"/addProject"} element={<AddEditProject onItemChange={loadAllProjects}/>}/>
+            <Route path={"/addProject"} element={<AddProject onItemChange={loadAllProjects}/>}/>
+            <Route path={"/:id/edit"}   element={<EditProject project={myProjects} onItemChange={loadAllProjects}/>} />
             <Route path={"/:id"}        element={<ProjectDetails onItemChange={loadAllProjects}/>} />
         </Routes>
     </>

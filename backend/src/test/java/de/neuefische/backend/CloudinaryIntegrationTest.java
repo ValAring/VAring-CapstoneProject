@@ -36,8 +36,6 @@ class CloudinaryIntegrationTest {
     @Test
     @DirtiesContext
     void testUploadImage() throws Exception {
-
-
         assertTrue(true);
     }
 }

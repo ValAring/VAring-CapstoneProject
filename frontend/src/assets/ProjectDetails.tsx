@@ -4,6 +4,7 @@ import {useEffect, useState} from "react";
 import axios from "axios";
 
 import homeBTN from "/house.svg";
+import editBTN from "/pen.svg";
 import deleteBTN from "/delete-cross.svg";
 import defaultCanvas from '/default-canvas.png';
 
@@ -42,16 +43,18 @@ export default function ProjectDetails(props: Props) {
     }
 
     return (
-        <>
             <div className="projectDetails">
                 <button className="iconBTN" onClick={() => navigate("/")}>
                 <img src={homeBTN} alt="back home button" width="20px" height="20px"/>
+                </button>
+                <button className="editBTN" onClick={() => navigate("/"+project?.id+"/edit")}>
+                    <img src={editBTN} alt="edit button" width="20px" height="20px"/>
                 </button>
                 <button className="editBTN" onClick={deleteCard}>
                     <img src={deleteBTN} alt="delete button" width="20px" height="20px"/>
                 </button>
 
-                <h2>{project && project.author}</h2>
+                <h2>{project?.author}</h2>
                 {project
                     ? <>
                         <img src={(project.imageURL === null) ? defaultCanvas : project.imageURL} alt={project.author} width="100%" height="auto"/>
@@ -64,7 +67,6 @@ export default function ProjectDetails(props: Props) {
                     </>
                 }
             </div>
-        </>
     );
 }
 

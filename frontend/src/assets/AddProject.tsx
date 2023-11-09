@@ -7,7 +7,7 @@ import homeBTN from "/house.svg";
 type Props = {
     readonly onItemChange: ()=> void
 }
-export default function AddEditProject(props: Props){
+export default function AddProject(props: Props){
     const navigate = useNavigate();
 
     const [author, setAuthor] = useState<string>("");

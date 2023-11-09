@@ -30,6 +30,11 @@ public class DashboardController {
      public Project addProject(@RequestPart ("data") Project newProject, @RequestPart(name = "file", required = false) MultipartFile image) throws Exception {
         return dashboardService.addProject(newProject, image);
     }
+    @PutMapping("/project/{id}/edit")
+    @ResponseStatus(HttpStatus.OK)
+    public Project editProject(@PathVariable String id, @RequestPart Project project) throws Exception {
+        return dashboardService.editProject(id, project);
+    }
     @DeleteMapping("/project/{id}")
     public void deleteProject(@PathVariable String id) {
         dashboardService.removeProject(id);
