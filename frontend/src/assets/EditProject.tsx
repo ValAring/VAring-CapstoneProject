@@ -1,137 +1,70 @@
 import '../App.css';
 import { useNavigate, useParams } from "react-router-dom";
-import { ChangeEvent, FormEvent, useState } from "react";
+import {ChangeEvent, FormEvent, useEffect, useState} from "react";
 import axios from "axios";
 import homeBTN from "/house.svg";
 import { Project } from './Types';
 
 type Props = {
-    project: Project[]
+    readonly project: Project[]
     readonly onItemChange: ()=> void
 }
 export default function EditProject(props: Props) {
     const { id } = useParams();
+    const filteredProject:Project[] = props.project.filter(e => e.id === id);
     const navigate = useNavigate();
 
-    const filteredProject:Project[] = props.project.filter(e => e.id === id);
+    if (filteredProject.length < 1)
+        return <>
+            Can't find book with id "{id}"<br/>
+            <button type="button" onClick={() => navigate("/")}>Back</button>
+        </>
 
-    const [author, setAuthor] = useState<string>(filteredProject[0].author);
-    const [description, setDescription] = useState<string>(filteredProject[0].description);
-    const [imageUrl, setImageUrl] = useState<string>(filteredProject[0].imageURL);
-    const [imageFile, setImageFile] = useState<File | null>(null);
+    return <EditProjectForm project={filteredProject[0]} reload={props.onItemChange}/>
+}
 
-    const newProject = {
-        author: author,
-        description: description
-    };
+type FormProps = {
+    readonly project: Project
+    readonly reload: ()=>void
+}
 
-    function addAuthor(author: ChangeEvent<HTMLInputElement>) {
-        setAuthor(author.target.value);
+function EditProjectForm( props: FormProps ) {
+    const [project, updateProject] = useState<Project>(props.project);
+    useEffect(
+        ()=> updateProject(props.project),
+        [ props.project ]
+    );
+    const navigate = useNavigate();
+    console.debug(`Rendering EditProjectForm { id:"${props.project.id}" }`);
+
+    function updateProjectValue( name:string, value:string ) {
+        updateProject( {
+            ...project,
+            [name]: value
+        } );
     }
 
-    function addDescription(description: ChangeEvent<HTMLTextAreaElement>) {
-        setDescription(description.target.value);
+    function onChangeFcnI( event: ChangeEvent<HTMLInputElement> ) {
+        updateProjectValue( event.target.name, event.target.value );
     }
 
-    function updateProject(event: FormEvent) {
+    function saveChanges( event: FormEvent<HTMLFormElement> ) {
         event.preventDefault();
+        update(project);
+        navigate("/"+project.id);
+    }
 
-        const formData = new FormData();
-
-        if (imageFile) {
-            formData.append("file", imageFile);
-        }
-        formData.append("data", new Blob([JSON.stringify(newProject)], { type: 'application/json' }));
-
-        axios.put(`/api/${id}`, formData, {
-            headers: {
-                'Content-Type': 'multipart/form-data'
-            }
-        })
-            .then((response) => {
-                console.log(response.data);
-                props.onItemChange();
+    function update( project: Project ) {
+        axios
+            .put('/api/project/'+project.id, project )
+            .then(response => {
+                if (response.status != 200)
+                    throw {error: "Got wrong status on update book: " + response.status}
+                props.reload()
+            })
+            .catch(reason => {
+                console.error(reason)
             });
-
-        navigate("/"+id);
-    }
-
-    function handleFileUpload(event: ChangeEvent<HTMLInputElement>) {
-        if (event.target.files && event.target.files.length > 0) {
-            const selectedFile = event.target.files[0];
-
-            if (selectedFile.type.startsWith("image/")) {
-                resizeImage(selectedFile, (resizedFile) => {
-                    setImageFile(resizedFile);
-
-                    const reader = new FileReader();
-                    reader.onload = (e) => {
-                        if (e.target) {
-                            setImageUrl(e.target.result as string);
-                        }
-                    };
-                    reader.readAsDataURL(resizedFile);
-                });
-
-            } else {
-                console.error("Selected file is not an image.");
-            }
-        } else {
-            setImageUrl("");
-        }
-    }
-
-    function resizeImage(file: File, callback: (resizedFile: File) => void) {
-        const reader = new FileReader();
-
-        reader.onload = (e: ProgressEvent<FileReader>) => {
-            if (e.target) {
-                const img = new Image();
-                img.src = e.target.result as string;
-
-                img.onload = () => {
-                    const canvas = document.createElement("canvas");
-                    const ctx = canvas.getContext("2d");
-
-                    if (ctx) {
-                        const maxWidth = 800;
-                        const maxHeight = 800;
-                        let width = img.width;
-                        let height = img.height;
-
-                        if (width > height) {
-                            if (width > maxWidth) {
-                                height *= maxWidth / width;
-                                width = maxWidth;
-                            }
-                        } else {
-                            if (height > maxHeight) {
-                                width *= maxHeight / height;
-                                height = maxHeight;
-                            }
-                        }
-                        canvas.width = width;
-                        canvas.height = height;
-
-                        ctx.drawImage(img, 0, 0, width, height);
-
-                        canvas.toBlob((blob) => {
-                            if (blob) {
-                                const resizedFile = new File([blob], file.name, { type: "image/jpeg" });
-                                callback(resizedFile);
-                            } else {
-                                console.error("Error converting canvas to blob");
-                            }
-                        }, "image/jpeg");
-                    } else {
-                        console.error("Canvas context is null");
-                    }
-                };
-            } else {
-                console.error("FileReader's target is null");
-            }
-        };
-        reader.readAsDataURL(file);
     }
 
     return (
@@ -139,12 +72,11 @@ export default function EditProject(props: Props) {
             <button className="iconBTN" onClick={() => navigate("/")}><img src={homeBTN} alt="back home button" width="20px" height="20px" /></button>
             <h2>Edit Project</h2>
 
-            <form onSubmit={updateProject}>
-                <input name="author" value={author} onChange={addAuthor} />
-                <textarea name="description" value={description} onChange={addDescription} />
+            <form onSubmit={saveChanges}>
+                <input name="author" value={project.author} onChange={onChangeFcnI} />
+                <input name="description" value={project.description} onChange={onChangeFcnI} />
 
-                <input type="file" onChange={handleFileUpload} />
-                {imageUrl && <img src={imageUrl} alt={author} width="150px" height="auto" />}
+                {project.imageURL && <img src={project.imageURL} alt={project.author} width="150px" height="auto" />}
 
                 <button className="saveBTN">Save</button>
             </form>
