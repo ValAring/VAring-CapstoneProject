@@ -26,17 +26,8 @@ export function resizeImage(file: File, callback: (resizedFile: File) => void){
             let width = img.width;
             let height = img.height;
 
-            if (width > height) {
-                if (width > maxWidth) {
-                    height *= maxWidth / width;
-                    width = maxWidth;
-                }
-            } else {
-                if (height > maxHeight) {
-                    width *= maxHeight / height;
-                    height = maxHeight;
-                }
-            }
+            width = width > height ? (width > maxWidth ? maxWidth : width) : width;
+            height = height > width ? (height > maxHeight ? maxHeight : height) : height;
 
             canvas.width = width;
             canvas.height = height;

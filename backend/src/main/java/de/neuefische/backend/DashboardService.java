@@ -49,8 +49,8 @@ public class DashboardService {
         if (!id.equals(project.id()))
             throw new IllegalArgumentException("editProject( id:%s, project:{ id:%s } ) -> given Id and Id of project are different".formatted(id, project.id()));
 
-        Optional<Project> existingBook = projectRepository.findById(id);
-        if (existingBook.isEmpty())
+        Optional<Project> existingProject = projectRepository.findById(id);
+        if (existingProject.isEmpty())
             throw new NoSuchElementException("editProject( id:%s, project:{ id:%s } ) -> Can't find a project Id \"%s\"".formatted(id, project.id(), project.id()));
 
         return projectRepository.save(project);

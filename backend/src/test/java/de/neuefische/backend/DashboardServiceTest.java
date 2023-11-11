@@ -3,6 +3,7 @@ package de.neuefische.backend;
 import de.neuefische.backend.model.Project;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.function.Executable;
 
 import java.io.IOException;
 import java.time.ZonedDateTime;
@@ -104,7 +105,53 @@ class DashboardServiceTest {
         verify(projectRepository).save(any(Project.class));
         assertEquals(expected, actual);
     }
+    @Test
+    void whenEditProject_getsInvalidIDs_throwException() {
+        // Given
+        String id = "456";
+        String projectId = "457";
 
+        // When
+        Executable executable = () -> dashboardService.editProject(id, new Project(projectId,   "AuthorA", "DescA", "UrlA", "Posted A", "Edited A"));
+
+        // Then
+        assertThrows(IllegalArgumentException.class, executable);
+    }
+
+    @Test
+    void whenEditProject_getsUnknownID_throwException() {
+        // Given
+        when(projectRepository.findById("456")).thenReturn(
+                Optional.empty()
+        );
+
+        // When
+        Executable executable = () -> dashboardService.editProject("456", new Project("456", "AuthorA", "DescA", "UrlA", "Posted A", "Edited A"));
+
+        // Then
+        assertThrows(NoSuchElementException.class, executable);
+        verify(projectRepository).findById("456");
+    }
+
+    @Test
+    void whenEditProject_getsValidID_returnsChangedProject() {
+        // Given
+        when(projectRepository.findById("456")).thenReturn(
+                Optional.of(new Project("456", "AuthorA", "DescA", "UrlA", "Posted A", "Edited A"))
+        );
+        when(projectRepository.save(new Project("456", "AuthorA", "DescA", "UrlA", "Posted A", "Edited A"))).thenReturn(
+                new Project("456", "AuthorA", "DescA", "UrlA", "Posted A", "Edited A")
+        );
+
+        // When
+        Project actual = dashboardService.editProject("456", new Project("456", "AuthorA", "DescA", "UrlA", "Posted A", "Edited A"));
+
+        // Then
+        verify(projectRepository).findById("456");
+        verify(projectRepository).save(new Project("456", "AuthorA", "DescA", "UrlA", "Posted A", "Edited A"));
+        Project expected = new Project("456", "AuthorA", "DescA", "UrlA", "Posted A", "Edited A");
+        assertEquals(expected, actual);
+    }
     @Test
     void deleteProject() {
 
@@ -112,8 +159,8 @@ class DashboardServiceTest {
 
         doThrow(NullPointerException.class).when(projectRepository).deleteById(p1.id());
 
-        assertThrows(NullPointerException.class, () -> {
-            projectRepository.deleteById("123");
-        });
+        assertThrows(NullPointerException.class, () ->
+            projectRepository.deleteById("123")
+        );
     }
 }

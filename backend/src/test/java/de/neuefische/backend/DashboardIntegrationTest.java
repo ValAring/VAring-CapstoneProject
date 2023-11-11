@@ -3,6 +3,7 @@ package de.neuefische.backend;
 import com.cloudinary.Cloudinary;
 import com.cloudinary.Uploader;
 import de.neuefische.backend.model.Project;
+import jakarta.servlet.ServletException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -17,6 +18,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import java.io.File;
 import java.util.Map;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -127,6 +129,82 @@ class DashboardIntegrationTest {
                                     }
                                 """))
                 .andExpect(jsonPath("$.id").isNotEmpty());
+    }
+
+    @Test
+    @DirtiesContext
+    void whenEditProject_getsInvalidID_returnsBadRequest(){
+        // Given
+        projectRepository.save(new Project("id1",  "Author 1", "Desc 1", "URL 1", "Posted 1", "Edited 1"));
+        projectRepository.save(new Project("id2",  "Author 2", "Desc 2", "URL 2", "Posted 2", "Edited 2"));
+        projectRepository.save(new Project("id3",  "Author 3", "Desc 3", "URL 3", "Posted 3", "Edited 3"));
+        projectRepository.save(new Project("id4",  "Author 4", "Desc 4", "URL 4", "Posted 4", "Edited 4"));
+
+        // When
+        assertThrows(ServletException.class, () ->
+            mockMvc
+                    .perform(MockMvcRequestBuilders
+                            .put("/api/project/id1")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content("""
+							{ "id": "id2", "author": "Author 1B", "description": "Desc 1", "imageURL": "URL 1", "timeCreated": "Posted 1", "lastEdited": "Edited 1"}
+						""")
+                    )
+
+                    // Then
+                    .andExpect(status().isBadRequest())
+        );
+    }
+
+    @Test
+    @DirtiesContext
+    void whenEditProject_getsUnknownID_returnsNotFound(){
+        // Given
+        projectRepository.save(new Project("id1",  "Author 1", "Desc 1", "URL 1", "Posted 1", "Edited 1"));
+        projectRepository.save(new Project("id2",  "Author 2", "Desc 2", "URL 2", "Posted 2", "Edited 2"));
+        projectRepository.save(new Project("id3",  "Author 3", "Desc 3", "URL 3", "Posted 3", "Edited 3"));
+        projectRepository.save(new Project("id4",  "Author 4", "Desc 4", "URL 4", "Posted 4", "Edited 4"));
+
+        // When
+        assertThrows(ServletException.class, () ->
+        mockMvc
+                .perform(MockMvcRequestBuilders
+                        .put("/api/project/id10")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+							{ "id": "id10", "author": "Author 1B", "description": "Desc 1", "imageURL": "URL 1", "timeCreated": "Posted 1", "lastEdited": "Edited 1"}
+						""")
+                )
+
+                // Then
+                .andExpect(status().isNotFound())
+                );
+    }
+
+    @Test
+    @DirtiesContext
+    void whenEditeProject_getsValidID_returnsChangedBook() throws Exception {
+        // Given
+        projectRepository.save(new Project("id1",  "Author 1", "Desc 1", "URL 1", "Posted 1", "Edited 1"));
+        projectRepository.save(new Project("id2",  "Author 2", "Desc 2", "URL 2", "Posted 2", "Edited 2"));
+        projectRepository.save(new Project("id3",  "Author 3", "Desc 3", "URL 3", "Posted 3", "Edited 3"));
+        projectRepository.save(new Project("id4",  "Author 4", "Desc 4", "URL 4", "Posted 4", "Edited 4"));
+
+        // When
+        mockMvc
+                .perform(MockMvcRequestBuilders
+                        .put("/api/project/id1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+							{ "id": "id1", "author": "Author 1B", "description": "Desc 1", "imageURL": "URL 1", "timeCreated": "Posted 1", "lastEdited": "Edited 1"}
+						""")
+                )
+
+                // Then
+                .andExpect(status().isOk())
+                .andExpect(content().json("""
+					{ "id": "id1", "author": "Author 1B", "description": "Desc 1", "imageURL": "URL 1", "timeCreated": "Posted 1", "lastEdited": "Edited 1"}
+						"""));
     }
 
     @Test

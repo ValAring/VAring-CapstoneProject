@@ -59,7 +59,7 @@ function EditProjectForm( props: FormProps ) {
             .put('/api/project/'+project.id, project )
             .then(response => {
                 if (response.status != 200)
-                    throw {error: "Got wrong status on update book: " + response.status}
+                    throw {error: "Got wrong status on update project: " + response.status}
                 props.reload()
             })
             .catch(reason => {
