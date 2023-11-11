@@ -1,21 +1,28 @@
 package de.neuefische.backend;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.cloudinary.Cloudinary;
+import com.cloudinary.Uploader;
 import de.neuefische.backend.model.Project;
+import jakarta.servlet.ServletException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.io.File;
+import java.util.Map;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
@@ -25,8 +32,10 @@ class DashboardIntegrationTest {
     private MockMvc mockMvc;
     @Autowired
     ProjectRepository projectRepository;
-    @Autowired
-    private ObjectMapper objectMapper;
+
+    @MockBean
+    Cloudinary cloudinary;
+    Uploader uploader = mock(Uploader.class);
 
     @Test
     @DirtiesContext
@@ -75,57 +84,128 @@ class DashboardIntegrationTest {
 
         //WHEN
         mockMvc.perform(MockMvcRequestBuilders.get("/api/"+ id))
-
                 //THEN
                 .andExpect(status().isNotFound());
     }
 
-/*    @Test
+    @Test
     @DirtiesContext
-    void whenAddProjects_getsNewProject_ReturnProject() throws Exception{*/
+    void whenAddProjects_getsNewProject_ReturnProject() throws Exception{
         //GIVEN
         //WHEN
-       /* Path imagePath = Paths.get("./frontend/public/default-canvas.png");
-        MockMultipartFile imageFile = new MockMultipartFile("file", "test-image.jpg", MediaType.IMAGE_JPEG_VALUE, Files.readAllBytes(imagePath));
 
-        Project newProject = new Project("123456","Author1", "MyDescription1","URL", "123","456");
-
-        mockMvc.perform(MockMvcRequestBuilders.multipart("/addProject")
-                        .file(imageFile)
-                        .param("data", objectMapper.writeValueAsString(newProject))
-                        .contentType(MediaType.MULTIPART_FORM_DATA))
-                .andExpect(status().isCreated());*/
-
-
-
-
-
-
-
-
-
-        /*mockMvc
-                .perform(MockMvcRequestBuilders.post("/api")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("""
+        MockMultipartFile data = new MockMultipartFile("data",
+                null,
+                MediaType.APPLICATION_JSON_VALUE,
+                """
                                     {
                                         "author": "Author1",
                                         "description": "MyDescription1",
-                                        "imageURL": "URL"
+                                        "imageURL": "testImage.png"
                                     }
-                                """)
-                )
-                //THEN
+                                """
+                        .getBytes()
+        );
+        MockMultipartFile file = new MockMultipartFile("file",
+                "testImage.png",
+                MediaType.IMAGE_PNG_VALUE,
+                "testImage".getBytes()
+        );
+        File fileToUpload = File.createTempFile("image", null);
+        file.transferTo(fileToUpload);
+
+        when(cloudinary.uploader()).thenReturn(uploader);
+        when(uploader.upload(any(), any())).thenReturn(Map.of("url", "testImage.png"));
+
+        mockMvc.perform(multipart("/api")
+                        .file(data)
+                        .file(file))
                 .andExpect(status().isCreated())
                 .andExpect(content().json("""
                                     {
                                         "author": "Author1",
                                         "description": "MyDescription1",
-                                        "imageURL": "URL"
+                                        "imageURL": "testImage.png"
                                     }
                                 """))
-                .andExpect(jsonPath("$.id").isString());*/
-    //}
+                .andExpect(jsonPath("$.id").isNotEmpty());
+    }
+
+    @Test
+    @DirtiesContext
+    void whenEditProject_getsInvalidID_returnsBadRequest(){
+        // Given
+        projectRepository.save(new Project("id1",  "Author 1", "Desc 1", "URL 1", "Posted 1", "Edited 1"));
+        projectRepository.save(new Project("id2",  "Author 2", "Desc 2", "URL 2", "Posted 2", "Edited 2"));
+        projectRepository.save(new Project("id3",  "Author 3", "Desc 3", "URL 3", "Posted 3", "Edited 3"));
+        projectRepository.save(new Project("id4",  "Author 4", "Desc 4", "URL 4", "Posted 4", "Edited 4"));
+
+        // When
+        assertThrows(ServletException.class, () ->
+            mockMvc
+                    .perform(MockMvcRequestBuilders
+                            .put("/api/project/id1")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content("""
+							{ "id": "id2", "author": "Author 1B", "description": "Desc 1", "imageURL": "URL 1", "timeCreated": "Posted 1", "lastEdited": "Edited 1"}
+						""")
+                    )
+
+                    // Then
+                    .andExpect(status().isBadRequest())
+        );
+    }
+
+    @Test
+    @DirtiesContext
+    void whenEditProject_getsUnknownID_returnsNotFound(){
+        // Given
+        projectRepository.save(new Project("id1",  "Author 1", "Desc 1", "URL 1", "Posted 1", "Edited 1"));
+        projectRepository.save(new Project("id2",  "Author 2", "Desc 2", "URL 2", "Posted 2", "Edited 2"));
+        projectRepository.save(new Project("id3",  "Author 3", "Desc 3", "URL 3", "Posted 3", "Edited 3"));
+        projectRepository.save(new Project("id4",  "Author 4", "Desc 4", "URL 4", "Posted 4", "Edited 4"));
+
+        // When
+        assertThrows(ServletException.class, () ->
+        mockMvc
+                .perform(MockMvcRequestBuilders
+                        .put("/api/project/id10")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+							{ "id": "id10", "author": "Author 1B", "description": "Desc 1", "imageURL": "URL 1", "timeCreated": "Posted 1", "lastEdited": "Edited 1"}
+						""")
+                )
+
+                // Then
+                .andExpect(status().isNotFound())
+                );
+    }
+
+    @Test
+    @DirtiesContext
+    void whenEditeProject_getsValidID_returnsChangedBook() throws Exception {
+        // Given
+        projectRepository.save(new Project("id1",  "Author 1", "Desc 1", "URL 1", "Posted 1", "Edited 1"));
+        projectRepository.save(new Project("id2",  "Author 2", "Desc 2", "URL 2", "Posted 2", "Edited 2"));
+        projectRepository.save(new Project("id3",  "Author 3", "Desc 3", "URL 3", "Posted 3", "Edited 3"));
+        projectRepository.save(new Project("id4",  "Author 4", "Desc 4", "URL 4", "Posted 4", "Edited 4"));
+
+        // When
+        mockMvc
+                .perform(MockMvcRequestBuilders
+                        .put("/api/project/id1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+							{ "id": "id1", "author": "Author 1B", "description": "Desc 1", "imageURL": "URL 1", "timeCreated": "Posted 1", "lastEdited": "Edited 1"}
+						""")
+                )
+
+                // Then
+                .andExpect(status().isOk())
+                .andExpect(content().json("""
+					{ "id": "id1", "author": "Author 1B", "description": "Desc 1", "imageURL": "URL 1", "timeCreated": "Posted 1", "lastEdited": "Edited 1"}
+						"""));
+    }
 
     @Test
     @DirtiesContext
@@ -140,7 +220,6 @@ class DashboardIntegrationTest {
     @Test
     void testHandleNoSuchElementException () throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/handleNoSuchElementException"))
-                .andExpect(status().isNotFound())/*
-                .andExpect(content().string("ID doesn't exist"))*/;
+                .andExpect(status().isNotFound());
     }
 }

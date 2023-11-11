@@ -62,9 +62,9 @@ export default function ProjectDetails(props: Props) {
                             {project.description}
                         </p>
                     </>
-                    : <>
+                    :
                         <p>Project not found</p>
-                    </>
+
                 }
             </div>
     );

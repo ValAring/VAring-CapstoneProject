@@ -32,13 +32,13 @@ public class DashboardController {
         return dashboardService.addProject(newProject, image);
     }
 
+    @PutMapping("/project/{id}")
+    public Project editProject(@PathVariable String id, @RequestBody Project project){
+        return dashboardService.editProject(id, project);
+    }
+
     @DeleteMapping("/project/{id}")
     public void deleteProject(@PathVariable String id) {
         dashboardService.removeProject(id);
-    }
-
-    @ExceptionHandler(NoSuchElementException.class)
-    public String handleNoSuchElementException() {
-        return "ID doesn't exist";
     }
 }
